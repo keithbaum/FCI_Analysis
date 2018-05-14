@@ -1,5 +1,4 @@
 import urllib.request, json
-from types import SimpleNamespace
 import datetime
 from fci import FCIsCollection
 from pprint import pprint
@@ -17,14 +16,11 @@ class Scrapper:
         data = parsed.get('data') if isinstance( parsed, dict ) else None 
         return self.transformJSONToFCIsCollection( data ) if data else self.emptyCollection()
 
-    #ToDo: Extract json lexic parser method
-
     def transformJSONToFCIsCollection( self, data ):
         collection = FCIsCollection()
         for node in data:
             collection.addNode( node )
         return collection.asDict()
-
 
     @staticmethod
     def emptyCollection():
@@ -37,7 +33,6 @@ class Scrapper:
     @staticmethod
     def generateUrlAddress( aDate ):
         return "https://api.cafci.org.ar/estadisticas/informacion/diaria/2/" + aDate.strftime('%Y-%m-%d')
-
 
 
 

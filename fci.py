@@ -1,5 +1,3 @@
-import collections
-
 class FCIsCollection:
 
     def __init__(self):
