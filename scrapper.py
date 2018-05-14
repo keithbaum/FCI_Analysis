@@ -1,4 +1,44 @@
-import urllib.request, json 
-with urllib.request.urlopen("https://api.cafci.org.ar/estadisticas/informacion/diaria/2/2018-04-26") as url:
-    data = json.loads(url.read().decode())
-    print(data)
+import urllib.request, json
+from types import SimpleNamespace
+import datetime
+from fci import FCIsCollection
+from pprint import pprint
+
+class Scrapper:
+    def getFCIsCollection( self, aDate ):
+        url = self.generateUrlAddress( aDate )
+        parser = self.urlParser()
+        try:
+            urlResponse = urllib.request.urlopen(url).read().decode()
+            parsed = parser( urlResponse )
+        except:
+            return self.emptyCollection()
+
+        data = parsed.get('data') if isinstance( parsed, dict ) else None 
+        return self.transformJSONToFCIsCollection( data ) if data else self.emptyCollection()
+
+    #ToDo: Extract json lexic parser method
+
+    def transformJSONToFCIsCollection( self, data ):
+        collection = FCIsCollection()
+        for node in data:
+            collection.addNode( node )
+        return collection.asDict()
+
+
+    @staticmethod
+    def emptyCollection():
+        return {}
+
+    @staticmethod
+    def urlParser():
+        return json.loads
+    
+    @staticmethod
+    def generateUrlAddress( aDate ):
+        return "https://api.cafci.org.ar/estadisticas/informacion/diaria/2/" + aDate.strftime('%Y-%m-%d')
+
+
+
+
+pprint( Scrapper().getFCIsCollection( datetime.date(2018,5,10) ) )
