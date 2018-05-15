@@ -1,4 +1,6 @@
-class FCIsCollection:
+import datetime
+
+class FCIsCollection( object ):
 
     def __init__(self):
         self.currentCategory = []
@@ -54,5 +56,22 @@ class FCIsCollection:
         else:
             return sum( [ self.sumTotalsForCategory( nodei ) for nodei in node['Data'].values() ] )
 
+    def _flatten(self,node,path,result={}):
+        if 'Data' in node:
+            for k,v in node['Data'].items():
+                newPath=path+[k]
+                result.update( self._flatten(v,newPath,result) )
+        else:
+            node.update( { 'Categoria' : path[:-1] } )
+            key = node.get('fondo','NoName'+(datetime.datetime.now().strftime("%s")))
+            node.pop('fondo', None)
+            result.update( { key:node } )
+
+        return result
+            
+    def _flattenedCollection(self):
+        return self._flatten( self._collection, [] )
+
+    @property
     def asDict(self):
-        return self._collection
+        return self._flattenedCollection()

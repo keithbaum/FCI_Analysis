@@ -20,7 +20,7 @@ class Scrapper:
         collection = FCIsCollection()
         for node in data:
             collection.addNode( node )
-        return collection.asDict()
+        return collection.asDict
 
     @staticmethod
     def emptyCollection():
