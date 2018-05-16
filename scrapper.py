@@ -36,4 +36,5 @@ class Scrapper:
 
 
 
+
 pprint( Scrapper().getFCIsCollection( datetime.date(2018,5,10) ) )
